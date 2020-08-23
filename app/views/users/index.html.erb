@@ -1,9 +1,19 @@
 <% provide(:title, 'All Users') %>
 <h1>ユーザー一覧</h1>
 
+<div class="name-form">
+<%= "ユーザー名検索" %>
+<%= form_tag(users_path, method: :get) do %>
+  <%= text_field_tag :search %>
+  <%= submit_tag 'Search', :name => nil %>
+<% end %>
+</div>
+
+</div>
 <div class="col-md-10 col-md-offset-1">
   <%= will_paginate %>
   <table class="table table-condensed table-hover" id="table-users">
+
     <thead>
       <tr>
         <th><%= User.human_attribute_name :name %></th>
