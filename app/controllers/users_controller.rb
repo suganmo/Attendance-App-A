@@ -7,12 +7,20 @@ class UsersController < ApplicationController
   
 
   def index
-    @users = User.paginate(page: params[:page]).search(params[:search]) 
+    @users = User.all
+     respond_to do |format|
+      format.html do
+      format.csv do |csv|
+        send_users_csv(@posts)
+          #csv用の処理を書く
+      end
+    end
   end
+end
 
   def import
-    Task.import(params[:file])
-    redirect_to root_url
+    User.import(params[:file])
+    redirect_to users_path
   end
 
   def show
@@ -75,10 +83,15 @@ class UsersController < ApplicationController
     end
     
     def basic_info_params
-      params.require(:user).permit(:department, :basic_time, :work_time)
+      params.require(:user).permit(:name, :email, :department, :employee_number, :uid, :password, 
+                                   :basic_work_time, :designated_work_start_time, :designated_work_time)
     end
-    
-    def search
-      @user = User.search(params[:search])
+
+    def overwork_request_params
+      params.require(:user).permit(attendances: [:id, :scheduled_end_time, :work_description])[:attendacces]
+    end
+
+    def overwork_params
+      params.require(:user).paramit(attendanses: [:scheduled_end_time, :next_day, :business_process, :confimation])[:attendances]
     end
 end

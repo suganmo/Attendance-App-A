@@ -1,0 +1,49 @@
+<%= form_with(model: @user, url:attendances_update_overwork_requset_user_path(params:{ day: day.worked_on}), local: true, method: :patch) do |f|%>
+<div class="modal-dialog model-lg model-dialog-center">
+ <div class="model-content">
+   <div class="model-header">
+      <button type="button" class="close" date-dismiss="modal" aria-label="close">
+       <span aria-hidden="true">&times;</span>
+      </button>
+      <h1 class="modal-title">残業申請</h1>
+     </div>
+     <div class="modal-body">
+      <div class="row">
+       <div class="col-md-10 col-md-offset-1">
+        <table class="table table-bordered table-overwork">
+            <thead>
+              <th>日付</th>
+              <th>曜日</th>
+              <th>終了予定時間</th>
+              <th>翌日</th>
+              <th>業務処理内容</th>
+              <th>指示者確認㊞</th>
+            </thead>
+            <tbody>
+              <%= @attendances.each do |day|%>
+                <%= f.fields_for "attendanced[]", day do |attendance| %>
+                  <td><%= l(@day, format: :short) %></td>
+                  <% if @day.wday == 6 %>
+                    <td class="sat"><%= $days_of_the_week[@day.wday] %>
+                  <% elsif @day.wday == 0 %>
+                    <td class="sun"><%= $days_of_the_week[@day.wday] %>
+                  <% else %>
+                    <td><%= $days_of_the_week[@day.wday] %>
+                  <% end %>
+                  <td><%= attendance.time_field :scheduled_end_time, class: "form-control" %></td>
+                  <td><%= attendance.check_box :next_day, id: "next_day" %></td>
+                  <td><%= attendance.text_field :budinedd_process, class: "form-control" %></td>
+                  <td><%= attendance.select :confirmation, [["なし", "なし"], ["申請中", "申請中"], ["承認", "承認"], ["否認", "否認"]], class: "form-control" %></td>
+                <% end %>
+              <% end %>
+            </tbody>
+          </table>
+          </div>
+          <div class="center">
+            <%= f.submit "変更を送信する", class: "btn btn-primary btn-block btn-user"%>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

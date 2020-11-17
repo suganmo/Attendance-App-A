@@ -12,11 +12,16 @@ Rails.application.routes.draw do
   end
   
   resources :users do
+    collection {post :import}
     member do
       get 'edit_basic_info'
       patch 'update_basic_info'
+      patch 'update_user_info'
+      get 'attendance_edit_log'
       get 'attendances/edit_one_month'
       patch 'attendances/update_one_month'
+      post 'attendances/update_overwork_request'
+      get 'edit_overwork_request'
     end
     resources :attendances, only: :update # この行を追加します。
   end

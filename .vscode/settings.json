@@ -1,0 +1,7 @@
+{
+    "editor.autoClosingOvertype": "never",
+    "editor.autoClosingQuotes": "never",
+    "editor.autoSurround": "never",
+    "editor.codeLens": false,
+    "editor.colorDecorators": false
+}
