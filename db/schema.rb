@@ -14,12 +14,21 @@ ActiveRecord::Schema.define(version: 20200704153627) do
 
   create_table "attendances", force: :cascade do |t|
     t.date "worked_on"
+    t.date "update_monthly_day"
     t.datetime "started_at"
     t.datetime "finished_at"
     t.datetime "scheduled_end_time"
+    t.boolean "next_day", default: false
+    t.boolean "approval_check", default: false
     t.string "business_processing_content"
     t.string "application"
     t.string "note"
+    t.string "monthly_confirmation"
+    t.string "monthly_confirmation_status"
+    t.string "month_confirmation"
+    t.string "month_confirmation_status"
+    t.string "overwork_confirmation"
+    t.string "overwork_confirmation_status"
     t.integer "user_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -35,12 +44,12 @@ ActiveRecord::Schema.define(version: 20200704153627) do
     t.time "basic_work_time", default: "2000-01-01 23:00:00"
     t.time "designated_work_start_time", default: "2000-01-01 00:00:00"
     t.time "designated_work_end_time", default: "2000-01-01 09:00:00"
-    t.boolean "superior", default: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "password_digest"
     t.string "remember_digest"
     t.boolean "admin", default: false
+    t.boolean "superior", default: false
     t.index ["email"], name: "index_users_on_email", unique: true
   end
 

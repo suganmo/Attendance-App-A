@@ -21,3 +21,4 @@
 /yarn-error.log
 
 .byebug_history
+app/views/users/_attendances_log.html.erb

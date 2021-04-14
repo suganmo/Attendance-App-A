@@ -1,0 +1,51 @@
+<div class="modal-dialog modal-lg modal-dialog-center ">
+  <div class="modal-content">
+    <div class="modal-header">
+      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+       <span aria-hidden="true">&times;</span>
+      </button>
+      <div>
+        <%= form_with(model: @user, url: approval_overwork_request_user_attendance_path(@user, @attendance), local: true, method: :patch) do |f| %> 
+          <% @attendance_notices.each do |id, attendance| %>
+            <h3 class="modal-title", style="text-align:center">【<%= User.find(id).name %>からの残業申請】</h3> 
+            <table class="table table-bordered table-striped table-condensed" id="table-attendances">
+              <thead>
+                <th>日付</th>
+                <th>曜日</th>
+                <th>終了予定時間</th>
+                <th>指定勤務終了時間</th>
+                <th>時間外時間</th>
+                <th>業務処理内容</th>
+                <th>指示者確認㊞</th>
+                <th>変更</th>
+                <th>勤怠を確認する</th>
+              </thead>
+                <% attendance.each do |att_notice| %>
+                  <%= f.fields_for "attendances[]", att_notice do |d| %>
+                    <tbody>
+                      <div>
+                        <tr>
+                         <% css_class = case %w{日 月 火 水 木 金 土}[att_notice.worked_on.wday]
+                          when '土' then 'text-primary' when '日' then 'text-danger' end %>
+                          <td><%= l(att_notice.worked_on, format: :short) %></td>
+                          <td class="<%= css_class %>"><%= %w{日 月 火 水 木 金 土}[att_notice.worked_on.wday] %></td>
+                          <td><%= format_basic_info(att_notice.scheduled_end_time) %></td>
+                          <td><%= format_basic_info(User.find(id).designated_work_end_time) %></td>
+                          <td><%= overtime_info(att_notice.scheduled_end_time, User.find(id).designated_work_end_time, att_notice.next_day) if att_notice.scheduled_end_time.present? %></td>
+                          <td><%= att_notice.business_processing_content %></td>
+                          <td><%= d.select :overwork_confirmation_status, [["なし"],["申請中"],["承認"],["否認"]], {include_blank: true} %></td>
+                          <td><%= d.check_box :approval_check %></td>
+                          <td><%= link_to "確認", confirm_one_month_user_path(User.find(id)), class: "btn btn~primary btn-md" %></td>
+                        </tr>
+                      </div>
+                    </tbody>
+                  <% end %>
+                <% end %>
+            </table>
+          <% end %>
+          <%= f.submit "変更を送信する", class: "btn btn-primary center-block " %>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>

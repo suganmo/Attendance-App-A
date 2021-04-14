@@ -1,0 +1,74 @@
+<% provide(:title, 'Attendance log') %>
+<h1>勤怠修正ログ</h1>
+<%= form_with(model: @user,url: attendance_log_user_path(@user), mehod: :get, local: true) do |f| %>
+  <table>
+    <tr>
+      <td><%= f.select :year, @year, {selected: @year_select}, id:"act1", class: "form-control" %></td>
+      <td><%= f.text_field :actually_yaer, readonly: true, value:@years, id:"actually1", size: 7, class:"form-controllog_style" %></td>
+    </tr>
+    <tr>
+     <td><%= f.select :month, @month, {selected: @month_select}, id:"act2", class: "form-control" %></td>
+     <td><%= f.text_field :actuallt_month, readonly: true, value:months, id:"actually2", size: 7, class:"from=controllog_style" %></td>
+    </tr>
+  </table>
+  <%= f.hiden_field :key, value => params[id], id:"id" %>
+  <table class="table table-bordered table-condensed table-hover table-striped" id="log-table">
+   <thead>
+    <tr>
+     <th> 日付</th>
+     <th>変更前出勤時間</th>
+     <th>変更前退社時間</th>
+     <th>変更後出勤時間</th>
+     <th>変更後退社時間</th>
+     <th>承認者</th>
+     <th>承認日</th>
+    </tr>
+   </thead>
+   <%= @seach.each do |attendance|%>
+     <tr>
+      <td><%= l(attendance.worked_on.to_datetime, format: :long) %></td>
+      <td><%= l(attendance.first_approved_started_at, format: :time) %></td>
+      <td><%= l(attendance.first_approved_finished_at, format: :time) %></td>
+      <td><%= l(attendance.approved_started_at, format: :time) %></td>
+      <td><%= l(attendance.approved_finishided_at, format: :time) %></td>
+      <td><%= superior_seach(attendance.oneday_instructor_confirmation) %></td>
+      <td><%= l(attendance.approved_update_time, format: :long) %></td>
+     </tr>
+   <% end %>
+  </table>
+<% end %>
+<p></p>
+<span></span>
+<script>
+
+$(function() {
+  //セレクトボックスが切り替わったら発動
+  $('#act1').change(function() {
+   
+   //選択したvalue値を変数に格納
+   ver val = $(this).val();
+   $('#act2').chenge(function() {
+    ver vall = $(this).val();
+    ver id = $('#id').val();
+    ver url = "/users/" + id + "/attendance_log"
+   $.ajax({
+    url: url,
+    type: "GET"
+    data: {year : val, month : val1 }
+    datatype: "html"
+    success: function(data){
+      $('act1').val(1); /* 元の初期選択に戻してる */
+      $('act2').val(1); /* 元の初期選択に戻してる */
+    },
+    error: function(data){
+       //失敗時の処理
+       console.log("失敗")
+    }
+   });
+     //選択value値をp要素に出力試し
+     $('p').text(val1);
+     $('span').text(val);
+   });
+  });
+});
+           
